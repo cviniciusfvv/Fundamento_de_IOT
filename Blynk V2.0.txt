@@ -1,0 +1,41 @@
+// Definindo que as mensagens de depuração serão impressas através da conexão Serial
+#define BLYNK_PRINT Serial
+
+// Incluindo bibliotecas necessárias para o programa
+#include <ESP8266WiFi.h>         // Biblioteca para usar o ESP8266 para conexão WiFi
+#include <BlynkSimpleEsp8266.h>  // Biblioteca para se comunicar com o serviço Blynk
+
+// Definindo o token de autenticação fornecido pelo Blynk
+#define BLYNK_AUTH_TOKEN "1Wxibh4NwDABQTyojQe3mcPyAqufjJXB"
+#define BLYNK_TEMPLATE_ID "SeuIDdoTemplateAqui"
+#define BLYNK_TEMPLATE_NAME "NomeDoTemplateAqui"
+
+// Declarando variáveis para armazenar informações sensíveis
+char auth[] = BLYNK_AUTH_TOKEN;  // Guarda o token de autenticação
+char ssid[] = "*******";         // Nome da rede WiFi
+char pass[] = "*******";      // Senha da rede WiFi
+
+// Declarando constantes para identificar os pinos do relé e do potenciômetro
+const int relePin = 5;            // Pino usado para controlar o relé
+const int potentiometer = A0;    // Pino usado para ler o valor do potenciômetro (conexão analógica)
+
+// Função de configuração que é executada apenas uma vez no início
+void setup() {
+  Serial.begin(115200);  // Inicializa a comunicação serial para depuração
+  pinMode(relePin, OUTPUT);  // Configura o pino do relé como saída
+  Blynk.begin(auth, ssid, pass, "blynk.cloud", 80);  // Inicializa a conexão Blynk
+  delay(10);  // Pequena pausa para garantir a inicialização
+}
+
+// Função que é executada repetidamente em um loop
+void loop() {
+  Blynk.run();  // Mantém a conexão Blynk funcionando
+
+  int potValue = analogRead(potentiometer);  // Lê o valor do potenciômetro
+  Blynk.virtualWrite(V2, potValue);  // Envia o valor lido para o aplicativo Blynk
+}
+
+// Função que é chamada quando um botão no aplicativo Blynk é pressionado (V0 representa o primeiro botão virtual)
+BLYNK_WRITE(V0) {
+  digitalWrite(relePin, param.asInt());  // Define o estado do relé com base no valor recebido do aplicativo
+}

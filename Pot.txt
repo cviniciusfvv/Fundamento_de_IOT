@@ -1,0 +1,26 @@
+// Define o pino onde o potenciômetro está conectado
+const int pinoPOT = A0;
+
+// Define o pino onde o LED está conectado
+const int pinoLED = 11;
+
+// Variável para armazenar o valor de brilho do LED
+float luminosidadeLED = 0;
+
+// Configuração inicial do programa
+void setup() {
+  // Configura o pino do potenciômetro para receber informações
+  pinMode(pinoPOT, INPUT);
+  
+  // Configura o pino do LED para enviar informações
+  pinMode(pinoLED, OUTPUT);
+}
+
+// Loop principal do programa
+void loop() {
+  // Lê o valor do potenciômetro e ajusta para um valor de brilho entre 0 e 255
+  luminosidadeLED = map(analogRead(pinoPOT), 0, 1023, 0, 255);
+  
+  // Define o brilho do LED com base no valor do potenciômetro
+  analogWrite(pinoLED, luminosidadeLED);
+}
